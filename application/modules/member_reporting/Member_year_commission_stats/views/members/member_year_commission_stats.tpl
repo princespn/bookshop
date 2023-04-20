@@ -1,0 +1,3 @@
+<script>
+{{ results.chart }}
+</script>

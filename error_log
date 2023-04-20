@@ -1,0 +1,1 @@
+[09-Apr-2023 02:28:05 UTC] PHP Warning:  "continue" targeting switch is equivalent to "break". Did you mean to use "continue 2"? in /home/fha2h66r0elm/public_html/application/helpers/admin_helper.php on line 56

@@ -1,0 +1,95 @@
+<?php
+/**
+ * CodeIgniter
+ *
+ * An open source application development framework for PHP 5.2.4 or newer
+ *
+ * This content is released under the MIT License (MIT)
+ *
+ * Copyright (c) 2014, British Columbia Institute of Technology
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+ * @package    CodeIgniter
+ * @author    EllisLab Dev Team
+ * @copyright    Copyright (c) 2008 - 2014, EllisLab, Inc. (http://ellislab.com/)
+ * @copyright    Copyright (c) 2014, British Columbia Institute of Technology (http://bcit.ca/)
+ * @license    http://opensource.org/licenses/MIT	MIT License
+ * @link    http://codeigniter.com
+ * @since    Version 1.0.0
+ * @filesource
+ */
+defined('BASEPATH') OR exit('No direct script access allowed');
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Error</title>
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</head>
+<body class="mt-3">
+<div class="container">
+    <div class="row">
+        <div class="col-10 offset-1">
+            <div class="hover-msg alert alert-danger">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                <h4 class="alert-heading">A PHP Error was encountered</h4>
+                <p>Severity: <?php echo $severity; ?></p>
+
+                <p>Message:  <?php echo $message; ?></p>
+
+                <p>Filename: <?php echo $filepath; ?></p>
+
+                <p>Line Number: <?php echo $line; ?></p>
+
+	            <?php if (defined('SHOW_DEBUG_BACKTRACE') && SHOW_DEBUG_BACKTRACE === TRUE): ?>
+
+                    <p>Backtrace:</p>
+		            <?php foreach (debug_backtrace() as $error): ?>
+
+			            <?php if (isset($error['file']) && strpos($error['file'], realpath(BASEPATH)) !== 0): ?>
+
+                            <p style="margin-left:10px">
+                                File: <?php echo $error['file'] ?><br/>
+                                Line: <?php echo $error['line'] ?><br/>
+                                Function: <?php echo $error['function'] ?>
+                            </p>
+
+			            <?php endif ?>
+
+		            <?php endforeach ?>
+
+	            <?php endif ?>
+                <hr />
+                <p><a href="javascript:history.go(-1)" class="btn btn-lg btn-danger">
+                        Go Back</a>
+                    <a href="https://my.jrox.com/link.php?id=17" target="_blank" class="btn btn-lg btn-light">
+                        Contact Support</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

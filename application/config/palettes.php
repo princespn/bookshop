@@ -1,0 +1,173 @@
+<?php defined('BASEPATH') OR exit('No direct script access allowed');
+/**
+ *
+ * Copyright (c) 2007-2020, JROX Technologies, Inc.
+ *
+ * This script may be only used and modified in accordance to the license
+ * agreement attached (license.txt) except where expressly noted within
+ * commented areas of the code body. This copyright notice and the
+ * comments above and below must remain intact at all times.  By using this
+ * code you agree to indemnify JROX Technologies, Inc, its corporate agents
+ * and affiliates from any liability that might arise from its use.
+ *
+ * Selling the code for this program without prior written consent is
+ * expressly forbidden and in violation of Domestic and International
+ * copyright laws.
+ *
+ * @package    eCommerce Suite
+ * @author    JROX Technologies, Inc.
+ * @copyright    Copyright (c) 2007 - 2020, JROX Technologies, Inc. (https://www.jrox.com/)
+ * @link    https://www.jrox.com
+ * @filesource
+ */
+
+$config['palettes'] = array('one'   => array('primary'        => '#007bff',
+                                             'secondary'      => '#868E96',
+                                             'success'        => '#28A745',
+                                             'info'           => '#17a2b8',
+                                             'warning'        => '#ffc107',
+                                             'danger'         => '#dc3545',
+                                             'light'          => '#f8f9fa',
+                                             'dark'           => '#343a40',
+                                             'background'     => '#ffffff',
+                                             'text'           => '#343a40',
+                                             'link'           => '#343a40',
+                                             'footer'         => '#343a40',
+                                             'footertext'     => '#eeeeee',
+                                             'topnav'         => '#eeeeee',
+                                             'topnavtext'     => '#343a40',
+                                             'pageheader'     => '#f4f4f4',
+                                             'pageheadertext' => '#343a40',
+                                             'yi_contrast'    => '150',
+                                             'header_font'    => 'Open Sans',
+                                             'base_font'      => 'Open Sans'),
+                            'two'  => array('primary'        => '#2C3E50',
+                                             'secondary'      => '#95a5a6',
+                                             'success'        => '#18BC9C',
+                                             'info'           => '#3498DB',
+                                             'warning'        => '#F39C12',
+                                             'danger'         => '#E74C3C',
+                                             'light'          => '#ecf0f1',
+                                             'dark'           => '#343a40',
+                                             'background'     => '#FFFFFF',
+                                             'text'           => '#343a40',
+                                             'link'           => '#343a40',
+                                             'footer'         => '#2C3E50',
+                                             'footertext'     => '#dddddd',
+                                             'topnav'         => '#eeeeee',
+                                             'topnavtext'     => '#343a40',
+                                             'pageheader'     => '#f4f4f4',
+                                             'pageheadertext' => '#343a40',
+                                             'yi_contrast'    => '150',
+                                             'header_font'    => 'Roboto',
+                                             'base_font'      => 'Roboto'),
+                            'three' => array('primary'        => '#2A9FD6',
+                                             'secondary'      => '#555',
+                                             'success'        => '#77B300',
+                                             'info'           => '#9933CC',
+                                             'warning'        => '#FF8800',
+                                             'danger'         => '#e06666',
+                                             'light'          => '#222',
+                                             'dark'           => '#ADAFAE',
+                                             'background'     => '#060606',
+                                             'text'           => '#e9ecef',
+                                             'link'           => '#e9ecef',
+                                             'footer'         => '#343a40',
+                                             'footertext'     => '#eeeeee',
+                                             'topnav'         => '#131313',
+                                             'topnavtext'     => '#dddddd',
+                                             'pageheader'     => '#222222',
+                                             'pageheadertext' => '#eeeeee',
+                                             'yi_contrast'    => '150',
+                                             'header_font'    => 'Oxygen',
+                                             'base_font'      => 'Oxygen'),
+                            'four'   => array('primary'        => '#2FA4E7',
+                                              'secondary'      => '#e9ecef',
+                                              'success'        => '#73A839',
+                                              'info'           => '#033C73',
+                                              'warning'        => '#DD5600',
+                                              'danger'         => '#C71C22',
+                                              'light'          => '#f8f9fa',
+                                              'dark'           => '#343a40',
+                                              'background'     => '#FFFFFF',
+                                              'text'           => '#495057',
+                                              'link'           => '#495057',
+                                              'footer'         => '#343a40',
+                                              'footertext'     => '#eeeeee',
+                                              'topnav'         => '#eeeeee',
+                                              'topnavtext'     => '#343a40',
+                                              'pageheader'     => '#d0e0e3',
+                                              'pageheadertext' => '#343a40',
+                                              'yi_contrast'    => '150',
+                                              'header_font'    => 'Quicksand',
+                                              'base_font'      => 'Quicksand'),
+                            'five'  => array('primary'        => '#A09FB2',
+                                             'secondary'      => '#80546C',
+                                             'success'        => '#324E88',
+                                             'info'           => '#F7F5F4',
+                                             'warning'        => '#B27A71',
+                                             'danger'         => '#d9534f',
+                                             'light'          => '#DDDDDD',
+                                             'dark'           => '#000',
+                                             'background'     => '#DDDDDD',
+                                             'text'           => '#333333',
+                                             'link'           => '#333333',
+                                             'footer'         => '#888888',
+                                             'footertext'     => '#ffffff',
+                                             'topnav'         => '#dddddd',
+                                             'topnavtext'     => '#343a40',
+                                             'pageheader'     => '#EAEAEA',
+                                             'pageheadertext' => '#343a40',
+                                             'yi_contrast'    => '150',
+                                             'header_font'    => 'Abril Fatface',
+                                             'base_font'      => 'Roboto'),
+                            'six'   => array('primary'        => '#78C2AD',
+                                             'secondary'      => '#F3969A',
+                                             'success'        => '#56CC9D',
+                                             'info'           => '#6CC3D5',
+                                             'warning'        => '#FFCE67',
+                                             'danger'         => '#FF7851',
+                                             'light'          => '#f8f9fa',
+                                             'dark'           => '#343a40',
+                                             'background'     => '#ffffff',
+                                             'text'           => '#888',
+                                             'link'           => '#888',
+                                             'footer'         => '#78C2AD',
+                                             'footertext'     => '#333333',
+                                             'topnav'         => '#eeeeee',
+                                             'topnavtext'     => '#343a40',
+                                             'pageheader'     => '#f4f4f4',
+                                             'pageheadertext' => '#343a40',
+                                             'yi_contrast'    => '250',
+                                             'header_font'    => 'Playfair Display',
+                                             'base_font'      => 'Sacrement'),
+                            'seven' => array('primary'        => '#3A3F44',
+                                             'secondary'      => '#7A8288',
+                                             'success'        => '#62c462',
+                                             'info'           => '#5bc0de',
+                                             'warning'        => '#f89406',
+                                             'danger'         => '#ee5f5b',
+                                             'light'          => '#e9ecef',
+                                             'dark'           => '#272B30',
+                                             'background'     => '#272B30',
+                                             'text'           => '#eee',
+                                             'link'           => '#eee',
+                                             'footer'         => '#888',
+                                             'footertext'     => '#eee',
+                                             'topnav'         => '#32383E',
+                                             'topnavtext'     => '#eeeeee',
+                                             'pageheader'     => '#272B30',
+                                             'pageheadertext' => '#eeeeee',
+                                             'yi_contrast'    => '150',
+                                             'header_font'    => 'Raleway',
+                                             'base_font'      => 'Encode Sans'),
+
+);
+
+if (file_exists(APPPATH . 'config/custom_palettes.php'))
+{
+	require_once(APPPATH . 'config/custom_palettes.php');
+}
+
+/* End of file palettes.php */
+/* Location: ./application/config/palettes.php */

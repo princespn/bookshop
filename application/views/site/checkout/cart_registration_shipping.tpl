@@ -1,0 +1,567 @@
+{% extends "global/base.tpl" %}
+{% block title %}{{ lang('your_cart')|capitalize }}{% endblock %}
+{% block meta_description %}{{ lang('checkout') }}{% endblock meta_description %}
+{% block meta_keywords %}{{ lang('checkout') }}{% endblock meta_keywords %}
+{% block meta_robots %}noindex, nofollow{% endblock meta_robots %}
+{% block javascript_header %}
+    {{ parent() }}
+    {% if checkout_js %}
+        {% for j in checkout_js %}
+            <script src="{{ j }}" charset="utf-8"></script>
+        {% endfor %}
+    {% endif %}
+    {% if checkout_css %}
+        {% for c in checkout_css %}
+            <link href="{{ c }}" rel="stylesheet" type="text/css"/>
+        {% endfor %}
+    {% endif %}
+{% endblock javascript_header %}
+{% block page_header %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h2 class="headline">{{ i('fa fa-lock') }} {{ lang('secure_checkout') }}</h2>
+            </div>
+
+        </div>
+    </div>
+{% endblock page_header %}
+{% block content %}
+    <div class="checkout-cart">
+        <div class="row">
+            <div class="col-md-12">
+                {{ breadcrumb }}
+                <div class="row">
+                    <div class="col-md-7">
+                        <div id="accordion">
+                            <div class="card">
+                                <h4 class="card-header" id="heading-one">
+                                        <span class="badge badge-pill badge-dark">1</span>
+                                        <span id="step-one-heading">{{ lang('account_details') }}</span>
+                                </h4>
+                                <div id="step-one" class="collapse show" aria-labelledby="heading-one"
+                                     data-parent="#accordion">
+                                    <div class="card-body">
+                                        {{ form_open(ssl_url('checkout/cart/account_details'), 'id="step-one-form"') }}
+                                        {% if sess('user_logged_in') %}
+                                            <h5>{{ lang('welcome_back') }}, {{ member.fname }}</h5>
+                                            {{ form_hidden('member_id', member.member_id) }}
+                                            {% if member.addresses %}
+                                                <br/>
+                                                <h5>{{ lang('select_shipping_address') }}</h5>
+                                                <hr/>
+                                                <div class="row">
+                                                    <div class="col-md-10 offset-md-1">
+                                                        {{ form_select_address(member.addresses) }}
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+                                        {% else %}
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <h5>{{ lang('customer_information') }}</h5>
+                                                    <p>
+                                                        <small>{{ lang('creating_account_makes_faster_checkout') }}</small>
+                                                    </p>
+                                                    <div class="radio">
+                                                        <label>
+                                                            <input type="radio" name="register" id="register" value="1"
+                                                                   checked>
+                                                            {{ lang('register_new_account') }}
+                                                        </label>
+                                                    </div>
+                                                    {% if require_user_login() == false %}
+                                                        {% if check_subscription(cart) == false %}
+                                                            <div class="radio">
+                                                                <label>
+                                                                    <input type="radio" name="register" id="guest"
+                                                                           value="0">
+                                                                    {{ lang('checkout_as_guest') }}
+                                                                </label>
+                                                            </div>
+                                                        {% endif %}
+                                                    {% endif %}
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <h5>{{ lang('returning_customer') }}</h5>
+
+                                                    <p>
+                                                        <small>{{ lang('login_to_your_account_here') }}</small>
+                                                    </p>
+                                                    <button type="button" class="btn btn-primary"
+                                                            data-toggle="modal"
+                                                            data-target="#login-modal">{{ i('fa fa-lock') }} {{ lang('login_to_account') }}</button>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    {% if (fields.account) %}
+                                                        <hr/>
+                                                        <h5>{{ lang('account_details') }}</h5>
+                                                        {% for s in fields.account %}
+                                                            {% if s.field_type != 'hidden' %}
+                                                                <div class="form-group row">
+                                                                    <label for="{{ s.form_field }}"
+                                                                           class="col-sm-4 col-form-label text-md-right">
+                                                                        {{ s.field_name }}
+                                                                    </label>
+
+                                                                    <div class="col-sm-7">{{ s.field }}</div>
+                                                                </div>
+                                                            {% else %}
+                                                                {{ s.field }}
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                        <div id="shipping-fields"
+                                             class="row {% if sess('user_logged_in') %} {% if member.addresses %} collapse {% endif %} {% endif %}">
+                                            <div class="col-md-12">
+                                                {% if (fields.shipping) %}
+                                                    <hr/>
+                                                    <h5>{{ lang('ship_to') }}</h5>
+                                                    {% for s in fields.shipping %}
+                                                        {% if s.field_type != 'hidden' %}
+                                                            <div class="form-group row">
+                                                                <label for="{{ s.form_field }}"
+                                                                       class="col-sm-4 col-form-label text-md-right">
+                                                                    {{ s.field_name }}
+                                                                </label>
+
+                                                                <div class="col-sm-7">{{ s.field }}</div>
+                                                            </div>
+                                                        {% else %}
+                                                            {{ s.field }}
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div id="payment-fields" class="row">
+                                            <div class="col-md-12">
+                                                {% if (fields.payment) %}
+                                                    <hr/>
+                                                    <h5>{{ lang('affiliate_payment') }}</h5>
+                                                    {% for s in fields.payment %}
+                                                        {% if s.field_type != 'hidden' %}
+                                                            <div class="form-group row">
+                                                                <label for="{{ s.form_field }}"
+                                                                       class="col-sm-4 col-form-label text-md-right">
+                                                                    {{ s.field_name }}
+                                                                </label>
+
+                                                                <div class="col-sm-7">{{ s.field }}</div>
+                                                            </div>
+                                                        {% else %}
+                                                            {{ s.field }}
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                        <div class="row">
+                                            {% if sess('user_logged_in') == false %}
+                                                {% if config_enabled('sts_form_enable_tos_checkbox') %}
+                                                    <div class="col-md-12">
+                                                        <div class="form-group row">
+                                                            <label class="col-sm-4">
+                                                                <a href="{{ site_url('tos') }}" target="_blank">
+                                                                    {{ lang('terms_of_service') }} {{ i('fa fa-external-link') }}</a>
+                                                            </label>
+                                                            <div class="col-sm-8">
+                                                                <div class="checkbox">
+                                                                    <label>
+                                                                        <input type="checkbox" name="tos"
+                                                                               class="required"> {{ lang('agree_with_tos') }}
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                                {% if config_enabled('sts_form_enable_list_subscribe_checkbox') %}
+                                                    <hr/>
+                                                    <div class="col-md-12">
+                                                        <div class="form-group row">
+                                                            <label class="col-sm-4">{{ lang('subscribe_to_mailing_list') }}</label>
+                                                            <div class="col-sm-8">
+                                                                <div class="checkbox">
+                                                                    <label>
+                                                                        <input type="checkbox" name="subscribe"
+                                                                               checked> {{ lang('yes_subscribe_me') }}
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                            {% endif %}
+                                            <div class="col-md-12">
+                                                <div class="form-group row">
+                                                    <div class="col-md-11 text-right">
+                                                        <button type="submit"
+                                                                class="btn btn-primary">{{ lang('continue') }} {{ i('fa fa-caret-right') }}</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {{ form_close() }}
+                                    </div>
+                                </div>
+                                <!-- end step one -->
+                            </div>
+                            <div class="card">
+                                <h4 class="card-header" id="heading-two">
+                                        <span class="badge badge-pill badge-dark">2</span>
+                                        <span id="step-two-heading">{{ lang('shipping_options') }}</span>
+                                </h4>
+                                <div id="step-two" class="collapse" aria-labelledby="heading-two"
+                                     data-parent="#accordion">
+                                    <div class="card-body">
+                                        {{ form_open(ssl_url('checkout/cart/select_shipping'), 'id="step-two-form"') }}
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div id="shipping-options-box"></div>
+                                            </div>
+                                        </div>
+                                        {{ form_close() }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card mb-3">
+                                <h4 class="card-header" role="tab" id="heading-three">
+                                        <span class="badge badge-pill badge-dark">3</span>
+                                        <span id="step-three-heading">{{ lang('payment_options') }}</span>
+                                </h4>
+                                <div id="step-three" class="collapse" aria-labelledby="heading-three"
+                                     data-parent="#accordion">
+                                    <div class="card-body">
+                                        {{ form_open(ssl_url('checkout/payment/select_payment'), 'id="step-three-form"') }}
+                                        <div id="payment-options-box"></div>
+                                        {{ form_close() }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card mb-3">
+                                <h4 class="card-header" role="tab" id="heading-four">
+                                        <span class="badge badge-pill badge-dark">4</span>
+                                        <span id="step-four-heading">{{ lang('payment_information') }}</span>
+                                </h4>
+                                <div id="step-four" class="collapse" aria-labelledby="heading-four"
+                                     data-parent="#accordion">
+                                    <div class="card-body">
+                                        <div id="payment-confirmation-box"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% include ('checkout/cart_totals.tpl') %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+{% block javascript_footer %}
+    {{ parent() }}
+    {{ include('js/default_form_js.tpl') }}
+    <script src="{{ base_url('js/select2/select2.min.js') }}"></script>
+    <script>
+        $(function () {
+            $('.datepicker-input').datepicker({format: '{{ format_date }}'});
+        });
+
+        select_country('#shipping_country');
+        select_country('#billing_country');
+        $('#shipping_address_id').on('change', function () {
+            if (this.value == 0) {
+                $('#shipping-fields').collapse('show');
+                $('.shipping.form-control').prop('disabled', false);
+                select_country('#shipping_country');
+            }
+            else {
+                $('#shipping-fields').collapse('hide');
+                $('.shipping.form-control').prop('disabled', true);
+            }
+        });
+
+        function select_country(id) {
+            //search countries
+            $(id).select2({
+                ajax: {
+                    url: '{{ site_url('search/search_countries/') }}',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            country_name: params.term, // search term
+                            page: params.page
+                        };
+                    },
+                    processResults: function (data, page) {
+                        return {
+                            results: $.map(data, function (item) {
+                                return {
+                                    id: item.country_id,
+                                    text: item.country_name
+                                }
+                            })
+                        };
+                    },
+                    cache: true
+                },
+                minimumInputLength: 2
+            });
+        }
+
+        function updateregion(select, type) {
+            $.get('{{ site_url('search/load_regions/state') }}', {country_id: $('#' + type + '_country').val()},
+                function (data) {
+                    $('#' + type + '_state').html(data);
+                    $(".s2").select2();
+                }
+            );
+        }
+
+        $("#step-one-form").validate({
+            errorContainer: $("#error-alert"),
+            submitHandler: function (form) {
+                $.ajax({
+                    url: '{{ ssl_url('checkout/cart/account_details') }}',
+                    type: 'post',
+                    data: $('#step-one-form').serialize(),
+                    dataType: 'json',
+                    beforeSend: function () {
+                        $('#shipping-options-box').html('<div class="alert alert-secondary">{{ lang('loading_shipping_options') }}...</div>');
+                    },
+                    success: function (data) {
+                        if (data['type'] == 'error') {
+                            $('#response').html('{{ alert('error') }}');
+                            if (data['error_fields']) {
+                                $.each(data['error_fields'], function (key, val) {
+                                    $('#' + key).addClass('error');
+                                    $('#' + key).focus();
+                                });
+                            }
+                        }
+                        else {
+                            //get rid of all the errors first
+                            $('.alert-danger').remove();
+                            $('.form-control').removeClass('error');
+
+                            //load the shipping options
+                            load_shipping_options();
+
+                            //activate tabs
+                            $("#step-one-heading").html('<a data-toggle="collapse" data-target="#step-one" data-parent="#accordion" href="#step-one" aria-expanded="true" aria-controls="step-one">{{ lang('account_details') }} </a> {{ i('fa fa-caret-down') }}');
+                            $("#step-two-heading").html('<a data-toggle="collapse" class="collapsed" data-target="#step-two" data-parent="#accordion" href="#step-two" aria-expanded="true" aria-controls="step-two">{{ lang('shipping_options') }} </a> {{ i('fa fa-caret-down') }}');
+                            $('#step-two').collapse('show');
+
+                        }
+
+                        //if there are any messages, load it here
+                        $('#msg-details').html(data['msg']);
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        {{ js_debug() }}(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+                    }
+                });
+            }
+        });
+
+        function load_shipping_options() {
+            $.ajax({
+                url: '{{ ssl_url('checkout/cart/shipping_options') }}',
+                type: 'get',
+                dataType: 'html',
+                success: function (data) {
+
+                    $('#shipping-options-box').html(data);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    {{ js_debug() }}(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+                }
+            });
+
+        }
+
+        $("#step-two-form").validate({
+            errorContainer: $("#error-alert"),
+            submitHandler: function (form) {
+                $.ajax({
+                    url: '{{ ssl_url('checkout/cart/select_shipping') }}',
+                    type: 'post',
+                    data: $('#step-two-form').serialize(),
+                    dataType: 'json',
+                    beforeSend: function () {
+                        $('#payment-options-box').html('<div class="alert alert-secondary">{{ lang('loading_payment_options') }}...</div>');
+                    },
+                    success: function (data) {
+                        if (data['type'] == 'error') {
+                            $('#response').html('{{ alert('error') }}');
+                        }
+                        else if (data['type'] == 'success') {
+                            $('.alert-danger').remove();
+                            $('.form-control').removeClass('error');
+                            $('.shipping-box').removeClass('hide');
+                            $('.gift-certificate-box').removeClass('hide');
+
+                            //update the cart totals
+                            if (data['cart_totals']) {
+                                $.each(data['cart_totals'], function (key, val) {
+                                    if (key == 'taxes') {
+                                        $('#tax-box').removeClass('hide');
+                                    }
+                                    $('#' + key).html(val);
+                                });
+                            }
+
+                            //load the payment options
+                            $('#payment-options-box').load('{{ ssl_url('checkout/payment/options/shipping') }}');
+
+                            //activate tabs
+                            $("#step-three-heading").html('<a data-toggle="collapse" data-parent="#accordion" href="#step-three" aria-expanded="true" aria-controls="step-three">{{ lang('payment_options') }} </a> {{ i('fa fa-caret-down') }}');
+                            $('#step-three').collapse('show');
+                        }
+
+                        $('#msg-details').html(data['msg']);
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        {{ js_debug() }}(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+                    }
+                });
+            }
+        });
+
+        $("#step-three-form").validate({
+            errorContainer: $("#error-alert"),
+            submitHandler: function (form) {
+                $.ajax({
+                    url: '{{ ssl_url('checkout/payment/select_payment') }}',
+                    type: 'post',
+                    data: $('#step-three-form').serialize(),
+                    dataType: 'json',
+                    beforeSend: function () {
+                        $('#payment-confirmation-box').html('<div class="alert alert-secondary">{{ lang('please_wait') }}...</div>');
+                    },
+                    success: function (data) {
+                        if (data['type'] == 'error') {
+                            $('#response').html('{{ alert('error') }}');
+                        }
+                        else if (data['type'] == 'success') {
+                            $('.alert-danger').remove();
+                            $('.form-control').removeClass('error');
+                            $('.gift-certificate-item').addClass('hide');
+
+                            $('#payment-confirmation-box').load('{{ ssl_url('checkout/payment/gateway_form/') }}');
+
+                            //activate tabs
+                            $("#step-four-heading").html('<a data-toggle="collapse" data-parent="#accordion" href="#step-four" aria-expanded="true" aria-controls="step-four">{{ lang('payment_information') }} </a> {{ i('fa fa-caret-down') }}');
+                            $('#step-four').collapse('show');
+                        }
+
+                        $('#msg-details').html(data['msg']);
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        {{ js_debug() }}(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+                    }
+                });
+            }
+        });
+
+        //run this only if the credit card payment failed so we have to redirect it back to this page.. :(
+        {% if step == 'payment' %}
+        //activate tabs
+        $("#step-one-heading").html('<a data-toggle="collapse" data-parent="#accordion" href="#step-one" aria-expanded="true" aria-controls="step-one">{{ lang('account_details') }} </a> {{ i('fa fa-caret-down') }}');
+        $("#step-two-heading").html('<a data-toggle="collapse" data-parent="#accordion" href="#step-two" aria-expanded="true" aria-controls="step-two">{{ lang('shipping_options') }} </a> {{ i('fa fa-caret-down') }}');
+        $("#step-three-heading").html('<a data-toggle="collapse" data-parent="#accordion" href="#step-three" aria-expanded="true" aria-controls="step-three">{{ lang('payment_options') }} </a> {{ i('fa fa-caret-down') }}');
+        $("#step-four-heading").html('<a data-toggle="collapse" data-parent="#accordion" href="#step-four" aria-expanded="true" aria-controls="step-four">{{ lang('payment_confirmation') }} </a> {{ i('fa fa-caret-down') }}');
+        $('#step-four').collapse('show');
+
+        $('.shipping-box').removeClass('hide');
+
+        //update the cart totals
+        {% if cart.totals %}
+        {% for k, p in cart.totals %}
+        $('#{{ k }}').html('{{ p }}');
+        {% endfor %}
+        {% endif %}
+
+        //load the shipping options
+        $('#shipping-options-box').load('{{ ssl_url('checkout/cart/shipping_options') }}');
+        $('#payment-options-box').load('{{ ssl_url('checkout/payment/options') }}');
+        $('#payment-confirmation-box').load('{{ ssl_url('checkout/payment/gateway_form/') }}');
+        {% endif %}
+
+        //apply coupon
+        $('#apply-code').on('click', function () {
+            $.ajax({
+                url: '{{ site_url('checkout/cart/apply_certificate') }}',
+                type: 'get',
+                data: 'certificate=' + encodeURIComponent($('#gift-certificate').val()),
+                dataType: 'json',
+                success: function (data) {
+                    if (data['type'] == 'error') {
+                        $('#response').html('{{ alert('error') }}');
+                        $('#msg-details').html(data['msg']);
+                    }
+                    else if (data['type'] == 'success') {
+                        //location.href = data['redirect'];
+                        $('.gift-certificate-item').removeClass('hide');
+                        //update the cart totals
+                        if (data['cart_totals']) {
+                            $.each(data['cart_totals'], function (key, val) {
+                                $('#' + key).html(val);
+                            });
+                        }
+
+                        $('#payment-options-box').load('{{ ssl_url('checkout/payment/options') }}');
+                        $("#step-four-heading").html('{{ lang('payment_confirmation') }}');
+                        $('#step-three').collapse('show');
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    {{ js_debug() }}(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+                }
+            });
+        });
+
+        $('#remove-code').on('click', function () {
+            $.ajax({
+                url: '{{ site_url('checkout/cart/remove_certificate') }}',
+                type: 'get',
+                data: '',
+                dataType: 'json',
+                success: function (data) {
+                    if (data['type'] == 'error') {
+                        $('#response').html('{{ alert('error') }}');
+                        $('#msg-details').html(data['msg']);
+                    }
+                    else if (data['type'] == 'success') {
+                        $('.gift-certificate-item').removeClass('hide');
+                        //update the cart totals
+                        if (data['cart_totals']) {
+                            $.each(data['cart_totals'], function (key, val) {
+                                $('#' + key).html(val);
+                            });
+                        }
+
+                        $('#payment-options-box').load('{{ ssl_url('checkout/payment/options') }}');
+                        $("#step-two-heading").html('{{ lang('payment_options') }}');
+                        $("#step-three-heading").html('{{ lang('payment_confirmation') }}');
+                        $('.gift-certificate-box').addClass('hide');
+                        $('#step-one').collapse('show');
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    {{ js_debug() }}(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+                }
+            });
+        });
+
+    </script>
+
+{% endblock javascript_footer %}

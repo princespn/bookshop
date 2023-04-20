@@ -1,0 +1,63 @@
+<div class="footer-menu">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <h4>{{ i('fa fa-group') }} {{ lang('about_us') }}</h4>
+                <p>{{ lang(sts_site_description) }}</p>
+            </div>
+            <div class="col-md-3">
+                <h4>{{ i('fa fa-map-marker') }} {{ lang('contact_us') }}</h4>
+                <address>
+                    <strong>{{ sts_site_name }}</strong><br/>
+                    {{ sts_site_shipping_address_1 }}<br/>
+                    {{ sts_site_shipping_city }},
+                    {{ sts_site_shipping_region_name }} {{ sts_site_shipping_postal_code }}
+                    {{ sts_site_shipping_country_iso_code_3 }}<br/>
+                    {{ sts_site_phone_number }}<br/>
+                    {{ encode_email(sts_site_email) }}
+                </address>
+            </div>
+            <div class="col-md-3">
+                <h4>{{ i('fa fa-link') }} {{ lang('quick_links') }}</h4>
+                <ul class="list-unstyled">
+                    <!--<li><a href="{{ site_url('store') }}">{{ lang('visit_our_store') }}</a> {{ i('fa fa-angle-right') }}
+                    </li>-->
+                    <li><a href="{{ site_url('blog') }}">{{ lang('read_our_blog') }}</a> {{ i('fa fa-angle-right') }}</li>
+                    <li>
+                        <a href="{{ site_url('faq') }}">{{ lang('frequently_asked_questions') }}</a> {{ i('fa fa-angle-right') }}
+                    </li>
+                    <li><a href="{{ ssl_url('login') }}">{{ lang('login_to_members_area') }}</a> {{ i('fa fa-angle-right') }}</li>
+                </ul>
+            </div>
+            <div class="col-md-3">
+                <!--<h4>{{ i('fa fa-twitter') }} {{ lang('get_in_touch') }}</h4>
+                <div class="text-center">
+                    {% if (sts_site_youtube_url) %}
+                    <a href="{{ sts_site_youtube_url }}"
+                       class="btn btn-danger btn-icon">{{ i('fa fa-youtube-play') }}</a>
+                    {% endif %}
+                    {% if (sts_site_facebook_url) %}
+                    <a href="{{ sts_site_facebook_url }}"
+                       class="btn btn-facebook btn-icon">{{ i('fa fa-facebook') }}</a>
+                    {% endif %}
+                    {% if (sts_site_twitter_url) %}
+                    <a href="{{ sts_site_twitter_url }}"
+                       class="btn btn-twitter btn-icon">{{ i('fa fa-twitter') }}</a>
+                    {% endif %}
+                    {% if (sts_site_instagram_url) %}
+                    <a href="{{ sts_site_instagram_url }}"
+                       class="btn btn-instagram btn-icon">{{ i('fa fa-instagram') }}</a>
+                    {% endif %}
+                    {% if (sts_site_pinterest_url) %}
+                    <a href="{{ sts_site_pinterest_url }}"
+                       class="btn btn-pinterest btn-icon">{{ i('fa fa-pinterest') }}</a>
+                    {% endif %}
+                    {% if (sts_site_linkedin_url) %}
+                    <a href="{{ sts_site_linkedin_url }}"
+                       class="btn btn-linkedin btn-icon">{{ i('fa fa-linkedin') }}</a>
+                    {% endif %}
+                </div>-->
+            </div>
+        </div>
+    </div>
+</div>
